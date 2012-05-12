@@ -1,5 +1,7 @@
 <?php
 /*
+ * Main Magnesium Class
+ *
  * Author: Phillip Whittlesea <pw.github@thega.me.uk>
  * Date: 12/05/2012
  */
@@ -11,42 +13,82 @@ include_once(dirname ( __FILE__ ) . "/classes/Magnesium_Single.php");
 
 class Magnesium {
 
+    // Reference to store
     protected static $store;
+
+    // List of ns to use as SPARQL PREFIX
     protected $namespaces;
 
-    // private constructor function
+    /**
+     * __construct
+     * Private constructor function
+     */
     function __construct() {
         global $arc_config, $mag_config;
 
+        // Initialise the ARC2 Store
         $this->store = ARC2::getStore($arc_config);
         if (!$this->store->isSetUp()) $this->store->setUp();
 
+        // Populate ns store from config
         $this->namespaces = array();
-
         foreach( $mag_config['namespaces'] as $short => $long ) {
             $this->ns( $short, $long );
         }
     }
 
-    function ns( $short = "blank", $long = "http://example.com/" ) {
+    /**
+     * ns
+     * Add namespace to global store
+     *
+     * @param string $short namespace prefix
+     * @param string $long full namespace qualifier
+     *
+     * @return boolean true
+     */
+    public function ns( $short = "blank", $long = "http://example.com/" ) {
         $this->namespaces[ $short ] = $long;
+        return true;
     }
 
+    /**
+     * nsToString
+     * Return SPARQL PREFIX list
+     *
+     * @return string $pl
+     */
     private function nsToString() {
-        $string = "";
+        $pl = "";
         foreach( $this->namespaces as $nss => $nsl ) {
-            $string .= "PREFIX ${nss}: <${nsl}>\n";
+            $pl .= "PREFIX ${nss}: <${nsl}>\n";
         }
-        return $string;
+        return $pl;
     }
 
-    public function query( $query = null ) {
+    /**
+     * query
+     * Query local ARC2 store for information
+     *
+     * @param string $query Query to run
+     *
+     * @return array rows from ARC2 store
+     * @return null
+     */
+    protected function query( $query = null ) {
         if ($rows = $this->store->query($this->nsToString().$query, 'rows')) {
             return $rows;
         }
-        return false;
+        return null;
     }
 
+    /**
+     * get
+     * Get subject
+     *
+     * @param string $uri The id of the subject
+     *
+     * @return Magnesium_Single Object representing $uri
+     */
     public function get( $uri = null ) {
         return new Magnesium_Single( $this, $uri );
     }

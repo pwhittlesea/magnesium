@@ -18,12 +18,12 @@ class Magnesium {
     function __construct() {
         global $arc_config, $mag_config;
 
-        $this->store = ARC2::getStore($config);
+        $this->store = ARC2::getStore($arc_config);
         if (!$this->store->isSetUp()) $this->store->setUp();
 
         $this->namespaces = array();
 
-        foreach( $config['namespaces'] as $short => $long ) {
+        foreach( $mag_config['namespaces'] as $short => $long ) {
             $this->ns( $short, $long );
         }
     }

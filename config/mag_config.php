@@ -1,6 +1,11 @@
 <?php
-
-$config = array(
+/*
+ * This file contains the configuration for magnesium.
+ *
+ * Author: Phillip Whittlesea <pw.github@thega.me.uk>
+ * Date: 12/05/2012
+ */
+$mag_config = array(
     "namespaces" => array(
         "foaf" => "http://xmlns.com/foaf/0.1/",
         "dc" =>   "http://purl.org/dc/elements/1.1/",

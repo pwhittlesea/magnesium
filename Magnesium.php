@@ -4,7 +4,7 @@
  * Date: 12/05/2012
  */
 include_once(dirname ( __FILE__ ) . "/lib/arc/ARC2.php");
-include_once(dirname ( __FILE__ ) . "/config/datastore.php");
+include_once(dirname ( __FILE__ ) . "/config/arc_config.php");
 include_once(dirname ( __FILE__ ) . "/config/mag_config.php");
 
 include_once(dirname ( __FILE__ ) . "/classes/Magnesium_Single.php");
@@ -16,8 +16,11 @@ class Magnesium {
 
     // private constructor function
     function __construct() {
-        global $store, $config;
-        $this->store = $store;
+        global $arc_config, $mag_config;
+
+        $this->store = ARC2::getStore($config);
+        if (!$this->store->isSetUp()) $this->store->setUp();
+
         $this->namespaces = array();
 
         foreach( $config['namespaces'] as $short => $long ) {

@@ -8,7 +8,7 @@
  * Author: Phillip Whittlesea <pw.github@thega.me.uk>
  * Date: 04/03/2012
  */
-$config = array(
+$arc_config = array(
   /* db */
   'db_name' => 'db_name',
   'db_user' => 'db_user',
@@ -16,7 +16,3 @@ $config = array(
   /* store */
   'store_name' => 'magnesium',
 );
-$store = ARC2::getStore($config);
-if (!$store->isSetUp()) {
-  $store->setUp();
-}

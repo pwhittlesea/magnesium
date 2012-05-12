@@ -8,7 +8,7 @@ As features improve, so will this manual...
 User Guide
 ---------
 
-How do I get a refernce to an object in my triple store?
+How do I get a reference to an object in my triple store?
 ```php
 $magnesium = new Magnesium();
 

@@ -82,6 +82,28 @@ class Magnesium {
     }
 
     /**
+     * select
+     * Query local ARC2 store using SELECT query
+     *
+     * @param string $subject subject to restrict
+     * @param string $predicate predicate to restrict
+     * @param string $object object to restrict
+     * @param string $wanted component of query desired
+     * @param string $graph sub-graph to query
+     *
+     * @return array rows from ARC2 store
+     */
+    protected function select($subject = null, $predicate = null, $object = null, $wanted = null, $graph = null) {
+        $g = ($graph) ? '<'.$graph.'>' : '?g';
+        $s = ($subject) ? '<'.$subject.'>' : '?s';
+        $p = ($predicate) ? $predicate : '?p';
+        $o = ($object) ? '<'.$object.'>' : '?o';
+        $w = ($wanted) ? $wanted : '?o';
+
+        return $this->query("SELECT ${w} WHERE { GRAPH ${g} { ${s} ${p} ${o} . } }");
+    }
+
+    /**
      * get
      * Get subject
      *

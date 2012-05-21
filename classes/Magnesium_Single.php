@@ -34,10 +34,8 @@ class Magnesium_Single {
      * @return array Magnesium_Single objects
      */
     public function rels($predicate = '') {
-        $query = "SELECT ?o WHERE { <".$this->uri."> ".$predicate." ?o . }";
-
         $o = array();
-        if ($rows = $this->magnesium->query($query)) {
+        if ($rows = $this->magnesium->select( $this->uri, $predicate, null, '?o' )) {
             foreach ($rows as $row) {
                 array_push( $o , $this->magnesium->get( $row['o'] ));
             }

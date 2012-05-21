@@ -10,9 +10,14 @@ User Guide
 
 How do I get a reference to an object in my triple store?
 ```php
+// Create a new Magnesium owner
 $magnesium = new Magnesium();
 
-$single = $magnesium->get( "URI" );
+// Collect our Subject and Object using a predicate
+$subject = $magnesium->get( "http://example.com/id/1" );
+$predicate = "http://predicate.org/ont#relation";
+$object = $subject->rel($predicate);
 
-echo $single;
+// Print out our triple
+echo "<${subject}> -> <${predicate}> -> <${object}>";
 ```

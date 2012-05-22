@@ -147,7 +147,7 @@ class Magnesium {
      */
     public function create( $uri = null ) {
         if ($this->insert('<'.$uri.'>', "dcterms:created", '"'.date(DATE_ATOM).'"')) {
-            return $this->get( $this, $uri );
+            return $this->get( $uri );
         }
         return null;
     }

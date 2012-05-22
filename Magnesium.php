@@ -70,12 +70,13 @@ class Magnesium {
      * Query local ARC2 store for information
      *
      * @param string $query Query to run
+     * @param string $type return type
      *
      * @return array rows from ARC2 store
      * @return null
      */
-    protected function query( $query = null ) {
-        if ($rows = $this->store->query($this->nsToString().$query, 'rows')) {
+    protected function query( $query = null, $type = 'rows') {
+        if ($rows = $this->store->query($this->nsToString().$query, $type)) {
             return $rows;
         }
         return null;
@@ -93,7 +94,7 @@ class Magnesium {
      *
      * @return array rows from ARC2 store
      */
-    protected function select($subject = null, $predicate = null, $object = null, $wanted = null, $graph = null) {
+    protected function select( $subject = null, $predicate = null, $object = null, $wanted = null, $graph = null ) {
         $g = ($graph) ? '<'.$graph.'>' : '?g';
         $s = ($subject) ? '<'.$subject.'>' : '?s';
         $p = ($predicate) ? $predicate : '?p';
@@ -101,6 +102,39 @@ class Magnesium {
         $w = ($wanted) ? $wanted : '?o';
 
         return $this->query("SELECT ${w} WHERE { GRAPH ${g} { ${s} ${p} ${o} . } }");
+    }
+
+    /**
+     * insert
+     * Insert new data into local ARC2 store
+     *
+     * @param string $s subject to insert
+     * @param string $p predicate to insert
+     * @param string $o object to insert
+     * @param string $graph sub-graph to insert to
+     *
+     * @return response from ARC2 store
+     */
+    protected function insert( $s, $p, $o, $graph = null ) {
+        $g = ($graph) ? 'INTO <'.$graph.'>' : '';
+
+        return $this->query("INSERT DATA ${g} { ${s} ${p} ${o} . }", 'raw');
+    }
+
+    /**
+     * new
+     * Create a new subject
+     *
+     * @param string $uri The id of the subject
+     *
+     * @return Magnesium_Single Object representing $uri
+     * @return null
+     */
+    public function new( $uri = null ) {
+        if ($this->insert($uri, "dcterms:created", date(DATE_ATOM))) {
+            return $this->get( $this, $uri );
+        }
+        return null;
     }
 
     /**

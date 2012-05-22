@@ -16,7 +16,7 @@ class Magnesium {
     // Reference to store
     protected static $store;
 
-    // List of ns to use as SPARQL PREFIX
+    // List of ns to use as PREFIX
     protected $namespaces;
 
     /**
@@ -53,14 +53,18 @@ class Magnesium {
 
     /**
      * nsToString
-     * Return SPARQL PREFIX list
+     * Return PREFIX list
+     *
+     * @param boolean $ttl is the string to be ttl compatible
      *
      * @return string $pl
      */
-    private function nsToString() {
+    private function nsToString( $ttl = false ) {
         $pl = "";
+        $prefix = ($ttl) ? "@prefix" : "PREFIX";
+
         foreach( $this->namespaces as $nss => $nsl ) {
-            $pl .= "PREFIX ${nss}: <${nsl}>\n";
+            $pl .= "${prefix} ${nss}: <${nsl}>\n";
         }
         return $pl;
     }
@@ -76,10 +80,17 @@ class Magnesium {
      * @return null
      */
     protected function query( $query = null, $type = 'rows') {
+        $return = array();
+
         if ($rows = $this->store->query($this->nsToString().$query, $type)) {
-            return $rows;
+            $return = $rows;
         }
-        return null;
+        if ($errs = $this->store->getErrors()) {
+            foreach ($errs as $err) {
+                echo "Error: ${err}\n";
+            }
+        }
+        return $return;
     }
 
     /**
@@ -115,10 +126,14 @@ class Magnesium {
      *
      * @return response from ARC2 store
      */
-    protected function insert( $s, $p, $o, $graph = null ) {
-        $g = ($graph) ? 'INTO <'.$graph.'>' : '';
+    protected function insert( $s, $p, $o, $graph = "http://example.com" ) {
 
-        return $this->query("INSERT DATA ${g} { ${s} ${p} ${o} . }", 'raw');
+        // Initialise the ARC2 Parser
+        $parser = ARC2::getTurtleParser();
+
+        $data = $this->nsToString(true) . "${s} ${p} ${o} .";
+        $parser->parse($graph, $data);
+        return $this->store->insert($parser->getTriples(), $graph, 0);
     }
 
     /**
@@ -131,7 +146,7 @@ class Magnesium {
      * @return null
      */
     public function create( $uri = null ) {
-        if ($this->insert($uri, "dcterms:created", date(DATE_ATOM))) {
+        if ($this->insert('<'.$uri.'>', "dcterms:created", '"'.date(DATE_ATOM).'"')) {
             return $this->get( $this, $uri );
         }
         return null;

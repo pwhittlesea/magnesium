@@ -79,7 +79,7 @@ class Magnesium {
      * @return array rows from ARC2 store
      * @return null
      */
-    protected function query( $query = null, $type = 'rows') {
+    public function query( $query = null, $type = 'rows') {
         $return = array();
 
         if ($rows = $this->store->query($this->nsToString().$query, $type)) {
@@ -105,7 +105,7 @@ class Magnesium {
      *
      * @return array rows from ARC2 store
      */
-    protected function select( $subject = null, $predicate = null, $object = null, $wanted = null, $graph = null ) {
+    public function select( $subject = null, $predicate = null, $object = null, $wanted = null, $graph = null ) {
         $g = ($graph) ? '<'.$graph.'>' : '?g';
         $s = ($subject) ? '<'.$subject.'>' : '?s';
         $p = ($predicate) ? $predicate : '?p';
@@ -126,7 +126,7 @@ class Magnesium {
      *
      * @return response from ARC2 store
      */
-    protected function insert( $s, $p, $o, $graph = "http://example.com" ) {
+    public function insert( $s, $p, $o, $graph = "http://example.com" ) {
 
         // Initialise the ARC2 Parser
         $parser = ARC2::getTurtleParser();

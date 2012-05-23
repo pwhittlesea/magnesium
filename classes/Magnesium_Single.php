@@ -58,6 +58,19 @@ class Magnesium_Single {
     }
 
     /**
+     * add
+     * add new information
+     *
+     * @param array $pairs The pairs to be added
+     */
+    public function add( $pairs = array() ) {
+        foreach ($pairs as $p => $o) {
+            $this->magnesium->insert('<'.$this->uri.'>', $p, $o);
+        }
+    }
+
+
+    /**
      * type
      * Fetch type of object
      *

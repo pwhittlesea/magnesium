@@ -137,22 +137,6 @@ class Magnesium {
     }
 
     /**
-     * create
-     * Create a new subject
-     *
-     * @param string $uri The id of the subject
-     *
-     * @return Magnesium_Single Object representing $uri
-     * @return null
-     */
-    public function create( $uri = null ) {
-        if ($this->insert('<'.$uri.'>', "dcterms:created", '"'.date(DATE_ATOM).'"')) {
-            return $this->get( $uri );
-        }
-        return null;
-    }
-
-    /**
      * get
      * Get subject
      *

@@ -6,6 +6,7 @@
  * Date: 12/05/2012
  */
 $mag_config = array(
+    "default" => "http://example.com/",
     "namespaces" => array(
         "foaf" => "http://xmlns.com/foaf/0.1/",
         "dc" =>   "http://purl.org/dc/elements/1.1/",
